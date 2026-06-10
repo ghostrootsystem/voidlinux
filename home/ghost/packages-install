@@ -1,0 +1,30 @@
+#!/bin/bash
+sudo xbps-install -Syu
+sudo xbps-install -y void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree
+sudo xbps-install -S
+sudo xbps-install -y 7zip MesaLib-devel NetworkManager alsa-lib-devel alsa-utils avr-gcc avr-libc avrdude base-devel base-system btop cargo cava cliphist cmake cmatrix dbus elogind eudev-libudev-devel fastfetch firefox flatpak font-awesome fuzzel git github-cli grim grub-x86_64-efi gtk4-devel helix i2c-tools ironbar kicad kicad-library kitty libX11-32bit libXext-32bit libXv-32bit libadwaita-devel libdisplay-info-devel libgcc-32bit libglvnd-32bit libinput-devel libjpeg-turbo-devel libseat-devel libusb-devel libxkbcommon-devel linux-firmware lxappearance mesa-demos mesa-dri mesa-dri-32bit mesa-vaapi-32bit mesa-vulkan-intel-32bit mesa-vulkan-nouveau mesa-vulkan-nouveau-32bit mpv mpvpaper mtools noto-fonts-emoji noto-fonts-ttf nvidia nvidia-libs-32bit obs openrgb openssl-devel pipewire pipewire-devel pixman-devel playerctl polkit qt5-wayland qt6-base-devel qt6-serialport-devel qt6-wayland rust seatd slurp squashfs-tools steam swappy vulkan-loader-32bit wireplumber wl-clipboard wlrctl xclock xdg-desktop-portal-gtk xdg-desktop-portal-wlr xorg-server-xwayland xorriso xterm xwayland-satellite yazi zsh
+
+mkdir -p ~/git
+
+if [ ! -d ~/git/voidlinux ]; then
+	git clone https://github.com/ghostrootsystem/voidlinux.git ~/git/voidlinux
+fi
+
+sudo cp -r ~/git/voidlinux/etc /
+cp -r ~/git/voidlinux/home/ghost /home
+
+if [ ! -d ~/git/rtw8852be ]; then
+	git clone https://github.com/lwfinger/rtw8852be.git ~/git/rtw8852be
+	cd ~/git/rtw8852be && make && sudo make install
+fi
+
+if [ ! -d ~/git/driftwm ]; then
+	git clone https://github.com/malbiruk/driftwm.git ~/git/driftwm
+	cd ~/git/driftwm && make build && sudo make install
+fi
+
+mkdir -p ~/.zsh/plugins/
+[ ! -d ~/.zsh/plugins/zsh-autosuggestions ] && git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/plugins/zsh-autosuggestions
+[ ! -d ~/.zsh/plugins/zsh-syntax-highlighting ] && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/plugins/zsh-syntax-highlighting
+
+sudo grub-mkconfig -o /boot/grub/grub.cfg
